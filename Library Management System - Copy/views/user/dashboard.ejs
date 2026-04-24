@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dashboard – Library</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    /* ── User Dashboard Extras ── */
+    .ud-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .ud-header h2 { font-size: 1.8rem; margin-bottom: 0.2rem; }
+    .ud-header p  { opacity: 0.85; font-size: 0.95rem; margin: 0; }
+    .ud-nav { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .ud-nav a {
+      background: rgba(255,255,255,0.18); color:#fff; padding:0.5rem 1.1rem;
+      border-radius: 20px; text-decoration:none; font-size:0.88rem; font-weight:600;
+      border: 1px solid rgba(255,255,255,0.3); transition: all 0.2s;
+    }
+    .ud-nav a:hover { background:rgba(255,255,255,0.35); }
+    .ud-nav a.danger-pill { background:rgba(220,53,69,0.55); border-color:rgba(220,53,69,0.4); }
+
+    /* Stats row */
+    .ud-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1.2rem; margin-bottom:2rem; }
+    .ud-stat {
+      background:#fff; border-radius:14px; padding:1.4rem 1.2rem;
+      box-shadow:0 2px 12px rgba(0,0,0,0.07); text-align:center; border-top:4px solid #667eea;
+    }
+    .ud-stat.warn  { border-top-color:#ffc107; }
+    .ud-stat.danger{ border-top-color:#dc3545; }
+    .ud-stat.good  { border-top-color:#28a745; }
+    .ud-stat .val  { font-size:2.2rem; font-weight:700; color:#333; line-height:1; }
+    .ud-stat .lbl  { font-size:0.78rem; color:#6c757d; text-transform:uppercase; letter-spacing:0.5px; margin-top:0.4rem; }
+
+    /* Tabs */
+    .ud-tabs { display:flex; gap:0; border-bottom:2px solid #e9ecef; margin-bottom:1.5rem; }
+    .ud-tab {
+      padding:0.75rem 1.4rem; cursor:pointer; font-weight:600; color:#6c757d;
+      border-bottom:3px solid transparent; margin-bottom:-2px; font-size:0.92rem;
+      background:none; border-top:none; border-left:none; border-right:none;
+      transition: color 0.2s;
+    }
+    .ud-tab.active { color:#667eea; border-bottom-color:#667eea; }
+    .ud-panel { display:none; }
+    .ud-panel.active { display:block; animation: fadeIn 0.3s ease; }
+
+    /* Notice banners */
+    .ud-notice {
+      display:flex; align-items:center; gap:0.8rem; padding:0.9rem 1.2rem;
+      border-radius:10px; margin-bottom:1rem; font-size:0.9rem; font-weight:500;
+    }
+    .ud-notice.overdue { background:#f8d7da; color:#721c24; border-left:4px solid #dc3545; }
+    .ud-notice.fine    { background:#fff3cd; color:#856404; border-left:4px solid #ffc107; }
+
+    /* Cards for book requests */
+    .req-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1rem; }
+    .req-card {
+      background:#fff; border-radius:12px; padding:1.2rem 1.4rem;
+      box-shadow:0 2px 10px rgba(0,0,0,0.07); border-left:4px solid #dee2e6;
+      display:flex; flex-direction:column; gap:0.4rem;
+    }
+    .req-card.approved  { border-left-color:#28a745; }
+    .req-card.pending   { border-left-color:#ffc107; }
+    .req-card.rejected  { border-left-color:#dc3545; }
+    .req-card .rc-title { font-weight:700; font-size:1rem; color:#333; }
+    .req-card .rc-meta  { font-size:0.82rem; color:#6c757d; }
+    .req-card .rc-due   { font-size:0.82rem; color:#495057; font-weight:600; }
+
+    .empty-state { text-align:center; padding:3rem 1rem; color:#aaa; }
+    .empty-state .icon { font-size:3rem; margin-bottom:0.8rem; }
+
+    /* Quick actions */
+    .ud-actions { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem; }
+    .ud-action-card {
+      flex:1; min-width:140px; background:#fff; border-radius:14px;
+      padding:1.4rem 1rem; text-align:center; text-decoration:none; color:#333;
+      box-shadow:0 2px 10px rgba(0,0,0,0.07); transition:all 0.25s;
+      border:2px solid transparent;
+    }
+    .ud-action-card:hover { border-color:#667eea; transform:translateY(-3px); box-shadow:0 6px 20px rgba(102,126,234,0.18); }
+    .ud-action-card .icon { font-size:2rem; margin-bottom:0.5rem; }
+    .ud-action-card .label { font-size:0.85rem; font-weight:600; color:#495057; }
+
+    @media(max-width:600px) {
+      .ud-header { flex-direction:column; align-items:flex-start; }
+      .ud-tabs { overflow-x:auto; }
+    }
+  </style>
+</head>
+<body>
+<header><h1>📚 Library Management System</h1></header>
+<div class="container">
+
+  <!-- Top header bar -->
+  <div class="ud-header">
+    <div>
+      <h2>👋 Welcome back, <%= user.name.split(' ')[0] %>!</h2>
+      <p>Your personal library dashboard</p>
+    </div>
+    <div class="ud-nav">
+      <a href="/user/profile">⚙️ Profile</a>
+      <a href="/user/logout" class="danger-pill">Logout</a>
+    </div>
+  </div>
+
+  <%
+    const activeBorrows   = transactions.filter(t => t.status === 'Issued').length;
+    const overdueCount    = transactions.filter(t => t.status === 'Overdue').length;
+    const returnedCount   = transactions.filter(t => t.status === 'Returned').length;
+    const pendingRequests = requests.filter(r => r.status === 'Pending').length;
+  %>
+
+  <!-- Stat cards -->
+  <div class="ud-stats">
+    <div class="ud-stat">
+      <div class="val"><%= activeBorrows %></div>
+      <div class="lbl">📗 Currently Borrowed</div>
+    </div>
+    <div class="ud-stat warn">
+      <div class="val"><%= pendingRequests %></div>
+      <div class="lbl">⏳ Pending Requests</div>
+    </div>
+    <div class="ud-stat danger">
+      <div class="val"><%= overdueCount %></div>
+      <div class="lbl">⚠️ Overdue</div>
+    </div>
+    <div class="ud-stat good">
+      <div class="val"><%= returnedCount %></div>
+      <div class="lbl">✅ Books Returned</div>
+    </div>
+    <div class="ud-stat <%= totalFine > 0 ? 'danger' : '' %>">
+      <div class="val">₹<%= totalFine %></div>
+      <div class="lbl">💰 Total Fine</div>
+    </div>
+  </div>
+
+  <!-- Alert banners -->
+  <% if (overdueCount > 0) { %>
+    <div class="ud-notice overdue">
+      ⚠️ You have <strong><%= overdueCount %> overdue book<%= overdueCount > 1 ? 's' : '' %></strong>. Please return them as soon as possible to avoid additional fines.
+    </div>
+  <% } %>
+  <% if (totalFine > 0) { %>
+    <div class="ud-notice fine">
+      💰 Outstanding fine of <strong>₹<%= totalFine %></strong>. Please pay at the library counter.
+    </div>
+  <% } %>
+
+  <!-- Quick Actions -->
+  <div class="ud-actions">
+    <a href="/user/books" class="ud-action-card">
+      <div class="icon">🔍</div>
+      <div class="label">Browse Books</div>
+    </a>
+  </div>
+
+  <!-- Tabs -->
+  <div class="ud-tabs">
+    <button class="ud-tab active" onclick="showTab('requests', this)">📋 Book Requests <% if(requests.length) { %>(<%= requests.length %>)<% } %></button>
+    <button class="ud-tab"       onclick="showTab('history',  this)">📖 Borrow History <% if(transactions.length) { %>(<%= transactions.length %>)<% } %></button>
+  </div>
+
+  <!-- Panel: Book Requests (card layout) -->
+  <div id="tab-requests" class="ud-panel active">
+    <% if (requests.length === 0) { %>
+      <div class="empty-state">
+        <div class="icon">📭</div>
+        <p>No book requests yet.</p>
+        <a href="/user/books" class="btn primary" style="display:inline-block;margin-top:1rem;">Browse Books</a>
+      </div>
+    <% } else { %>
+      <div class="req-cards">
+        <% requests.forEach(r => { %>
+          <div class="req-card <%= r.status.toLowerCase() %>">
+            <div class="rc-title">📚 <%= r.book ? r.book.bookName : 'N/A' %></div>
+            <div class="rc-meta">Requested: <%= r.requestDate.toDateString() %></div>
+            <% if (r.dueDate) { %>
+              <div class="rc-due">Due: <%= r.dueDate.toDateString() %></div>
+            <% } %>
+            <div style="margin-top:0.5rem;">
+              <span class="status <%= r.status === 'Approved' ? 'available' : r.status === 'Rejected' ? 'overdue' : 'issued' %>">
+                <%= r.status %>
+              </span>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Panel: Borrow History (table) -->
+  <div id="tab-history" class="ud-panel">
+    <% if (transactions.length === 0) { %>
+      <div class="empty-state">
+        <div class="icon">📖</div>
+        <p>No borrowing history yet.</p>
+      </div>
+    <% } else { %>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Book</th>
+              <th>Issued</th>
+              <th>Due</th>
+              <th>Returned</th>
+              <th>Fine</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% transactions.forEach(t => { %>
+              <tr>
+                <td><strong><%= t.book ? t.book.bookName : 'N/A' %></strong></td>
+                <td><%= t.issueDate.toLocaleDateString('en-IN') %></td>
+                <td><%= t.dueDate.toLocaleDateString('en-IN') %></td>
+                <td><%= t.returnDate ? t.returnDate.toLocaleDateString('en-IN') : '—' %></td>
+                <td><% if(t.fine > 0) { %><span style="color:#dc3545;font-weight:700;">₹<%= t.fine %></span><% } else { %>₹0<% } %></td>
+                <td>
+                  <span class="status <%= t.status === 'Issued' ? 'issued' : t.status === 'Returned' ? 'returned' : 'overdue' %>">
+                    <%= t.status %>
+                  </span>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+</div>
+
+<script>
+  function showTab(name, btn) {
+    document.querySelectorAll('.ud-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.ud-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>

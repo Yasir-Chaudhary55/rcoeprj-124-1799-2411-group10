@@ -1,0 +1,46 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<div class="container">
+  <div class="section-header">
+    <h2>Issue Book</h2>
+    <a href="/transactions" class="btn secondary">← Back to Transactions</a>
+  </div>
+
+  <div class="form-container">
+    <div class="modal-content">
+      <form action="/transactions" method="POST">
+
+        <div class="form-group">
+          <label>Book</label>
+          <select name="book" required>
+            <option value="">Select a book</option>
+            <% books.forEach((b) => { %>
+              <option value="<%= b._id %>"><%= b.bookName %> (Available: <%= b.available %>)</option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Member</label>
+          <select name="member" required>
+            <option value="">Select a member</option>
+            <% members.forEach((m) => { %>
+              <option value="<%= m._id %>"><%= m.name %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Due Date</label>
+          <input type="date" name="dueDate" required />
+        </div>
+
+        <div class="form-actions">
+          <a href="/transactions" class="btn secondary">Cancel</a>
+          <button type="submit" class="btn primary">Issue Book</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

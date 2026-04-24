@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Login</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>
+      📚 Library Management System
+    </h1>
+  </header>
+  <div class="container">
+  <div style="display:flex; justify-content:center; align-items:center; min-height:80vh;">
+    <div class="modal-content" style="width:100%; max-width:420px;">
+
+      <div style="display:flex; margin-bottom:2rem; border-bottom:2px solid #e9ecef;">
+        <a href="/user/login"    style="flex:1; padding:0.8rem; text-align:center; text-decoration:none;
+          font-weight:600; color:#667eea; border-bottom:3px solid #667eea;">Login</a>
+        <a href="/user/register" style="flex:1; padding:0.8rem; text-align:center; text-decoration:none;
+          font-weight:600; color:#aaa;">Register</a>
+      </div>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <p style="color:#dc3545; margin-bottom:1rem; text-align:center;"><%= error %></p>
+      <% } %>
+      <% if (typeof success !== 'undefined' && success) { %>
+        <p style="color:#28a745; margin-bottom:1rem; text-align:center;"><%= success %></p>
+      <% } %>
+
+      <h3 style="text-align:center; margin-bottom:1.5rem;">🔐 User Login</h3>
+      <form action="/user/login" method="POST">
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" required placeholder="Enter your email" />
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" required placeholder="Enter your password" />
+        </div>
+
+        <div class="form-actions" style="justify-content:center;">
+          <button type="submit" class="btn primary" style="width:100%;">Login</button>
+        </div>
+
+        <div style="text-align:center; margin-top:1rem;">
+          <a href="/user/forgot-password" style="color:#667eea; text-decoration:none; font-size:0.9rem;">
+            Forgot Password?
+          </a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

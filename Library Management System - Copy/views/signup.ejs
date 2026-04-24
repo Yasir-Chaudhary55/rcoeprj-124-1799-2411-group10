@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>
+      📚 Library Management System
+    </h1>
+  </header>
+
+<div class="container">
+  <div style="display:flex; justify-content:center; align-items:center; min-height:80vh;">
+    <div class="modal-content" style="width:100%; max-width:420px;">
+
+      <!-- Tabs -->
+      <div style="display:flex; margin-bottom:2rem; border-bottom:2px solid #e9ecef;">
+        <a href="/login"  style="flex:1; padding:0.8rem; text-align:center; text-decoration:none;
+          font-weight:600; color:#aaa;">Login</a>
+        <a href="/signup" style="flex:1; padding:0.8rem; text-align:center; text-decoration:none;
+          font-weight:600; color:#667eea; border-bottom:3px solid #667eea;">Sign Up</a>
+      </div>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <p style="color:#dc3545; margin-bottom:1rem; text-align:center;"><%= error %></p>
+      <% } %>
+
+      <h3 style="text-align:center; margin-bottom:1.5rem;">📝 Create Admin</h3>
+      <form action="/signup" method="POST">
+
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" name="username" required placeholder="Choose a username" />
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" required placeholder="Enter email address" />
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" name="phone" required placeholder="Enter phone number" />
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" required placeholder="Choose a password" />
+        </div>
+
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input type="password" name="confirmPassword" required placeholder="Confirm password" />
+        </div>
+
+        
+        <div style="margin:1.2rem 0 0.5rem; padding-top:1rem; border-top:2px solid #e9ecef;">
+          <p style="font-weight:600; color:#495057; margin-bottom:0.8rem;">🛡️ Account Recovery</p>
+        </div>
+        <div class="form-group">
+          <label>Security Question</label>
+          <select name="securityQuestion" required>
+            <option value="">-- Choose a question --</option>
+            <option value="What was the name of your first pet?">What was the name of your first pet?</option>
+            <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+            <option value="What was the name of your primary school?">What was the name of your primary school?</option>
+            <option value="What city were you born in?">What city were you born in?</option>
+            <option value="What was your childhood nickname?">What was your childhood nickname?</option>
+            <option value="What is the name of the street you grew up on?">What is the name of the street you grew up on?</option>
+            <option value="What was the make of your first car?">What was the make of your first car?</option>
+            <option value="What is your oldest sibling's middle name?">What is your oldest sibling's middle name?</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Security Answer</label>
+          <input type="text" name="securityAnswer" required placeholder="Your answer (case-insensitive)" autocomplete="off" />
+          <small style="color:#6c757d;font-size:0.78rem;">Used to verify identity if you forget your password.</small>
+        </div>
+        <div class="form-actions" style="justify-content:center;">
+          <button type="submit" class="btn primary" style="width:100%;">Sign Up</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+</body>

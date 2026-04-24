@@ -1,0 +1,70 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<div class="container">
+  <div class="section-header">
+    <h2>Add New Book</h2>
+    <a href="/books" class="btn secondary">← Back to Books</a>
+  </div>
+  <div class="form-container">
+    <div class="modal-content" style="margin: 0; max-width: 600px">
+      <form action="/books" method="POST">
+        <div class="form-group">
+          <label>Book Name</label>
+          <input
+            type="text"
+            name="bookName"
+            required
+            placeholder="Enter book name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Author Name</label>
+          <input
+            type="text"
+            name="authorName"
+            required
+            placeholder="Enter author name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <input
+            type="text"
+            name="category"
+            required
+            placeholder="e.g. Fiction, Science..."
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Quantity</label>
+          <input
+            type="number"
+            name="quantity"
+            required
+            min="1"
+            placeholder="Total copies"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Available</label>
+          <input
+            type="number"
+            name="available"
+            required
+            min="0"
+            placeholder="Available copies"
+          />
+        </div>
+
+        <div class="form-actions">
+          <a href="/books" class="btn secondary">Cancel</a>
+          <button type="submit" class="btn primary">Add Book</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

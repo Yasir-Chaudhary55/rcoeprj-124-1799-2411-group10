@@ -1,0 +1,76 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<div class="container">
+  <section id="transactions" class="tab-content active">
+
+    <div class="section-header">
+      <h2>Transaction Management</h2>
+      <a href="/transactions/new" class="btn primary">Issue Book</a>
+    </div>
+
+    <form class="search-filter" method="GET" action="/transactions">
+      <input
+        type="text"
+        name="search"
+        placeholder="Search transactions..."
+        value="<%= typeof search !== 'undefined' ? search : '' %>"
+      />
+      <select name="status" onchange="this.form.submit()">
+        <option value="">All Transactions</option>
+        <option value="Issued"   <%= typeof status !== 'undefined' && status === 'Issued'   ? 'selected' : '' %>>Issued</option>
+        <option value="Returned" <%= typeof status !== 'undefined' && status === 'Returned' ? 'selected' : '' %>>Returned</option>
+        <option value="Overdue"  <%= typeof status !== 'undefined' && status === 'Overdue'  ? 'selected' : '' %>>Overdue</option>
+      </select>
+      <button type="submit" style="display:none"></button>
+    </form>
+
+    <div class="table-container">
+      <table id="transactionsTable">
+        <thead>
+          <tr>
+            <th>Transaction ID</th>
+            <th>Book Title</th>
+            <th>Member Name</th>
+            <th>Issue Date</th>
+            <th>Due Date</th>
+            <th>Return Date</th>
+            <th>Status</th>
+            <th>Fine</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% transactions.forEach((t) => { %>
+            <tr>
+              <td><%= t._id.toString().slice(-6).toUpperCase() %></td>
+              <td><%= t.book   ? t.book.bookName : 'N/A' %></td>
+              <td><%= t.member ? t.member.name   : 'N/A' %></td>
+              <td><%= t.issueDate.toDateString() %></td>
+              <td><%= t.dueDate.toDateString() %></td>
+              <td><%= t.returnDate ? t.returnDate.toDateString() : '-' %></td>
+              <td>
+                <span class="status <%= t.status === 'Issued' ? 'issued' : t.status === 'Returned' ? 'returned' : 'overdue' %>">
+                  <%= t.status %>
+                </span>
+              </td>
+              <td>₹<%= t.fine %></td>
+              <td>
+                <% if (t.status === 'Issued' || t.status === 'Overdue') { %>
+                  <form action="/transactions/<%= t._id %>/return?_method=PUT" method="POST" style="display:inline">
+                    <button type="submit" class="action-btn edit"
+                      onclick="return confirm('Mark as returned?')">Return</button>
+                  </form>
+                <% } %>
+                <form action="/transactions/<%= t._id %>?_method=DELETE" method="POST" style="display:inline">
+                  <button type="submit" class="action-btn delete"
+                    onclick="return confirm('Delete this transaction?')">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+</div>

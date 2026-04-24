@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>
+      📚 Library Management System
+    </h1>
+  </header>
+  <div class="container">
+  <div style="display:flex; justify-content:center; align-items:center; min-height:80vh;">
+    <div class="modal-content" style="width:100%; max-width:420px;">
+
+      <div style="text-align:center; margin-bottom:1rem;">
+        <a href="/login" style="color:#667eea; text-decoration:none;">← Back</a>
+      </div>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <p style="color:#dc3545; margin-bottom:1rem; text-align:center;"><%= error %></p>
+      <% } %>
+      <% if (typeof success !== 'undefined' && success) { %>
+        <p style="color:#28a745; margin-bottom:1rem; text-align:center;"><%= success %></p>
+      <% } %>
+
+      <h3 style="text-align:center; margin-bottom:1.5rem;">🔐 Admin Login</h3>
+      <form action="/login/admin" method="POST">
+
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" name="username" required placeholder="Enter username" />
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" required placeholder="Enter password" />
+        </div>
+
+        <div class="form-actions" style="justify-content:center;">
+          <button type="submit" class="btn primary" style="width:100%;">Login</button>
+        </div>
+
+        <div style="text-align:center; margin-top:1rem;">
+          <a href="/admin/forgot-password" style="color:#667eea; text-decoration:none; font-size:0.9rem;">
+            Forgot Password?
+          </a>
+        </div>
+
+        <div style="text-align:center; margin-top:1rem; color:#6c757d;">
+          New admin?
+          <a href="/signup" style="color:#667eea; text-decoration:none; font-weight:600;">Sign up here</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Books</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>
+      📚 Library Management System
+    </h1>
+  </header>
+  <div class="container">
+  <div class="section-header">
+    <h2>📚 Available Books</h2>
+    <a href="/user/dashboard" class="btn secondary">← My Dashboard</a>
+  </div>
+
+  <form class="search-filter" method="GET" action="/user/books">
+    <input
+      type="text"
+      name="search"
+      placeholder="Search by book name or author..."
+      value="<%= typeof search !== 'undefined' ? search : '' %>"
+    />
+    <select name="category" onchange="this.form.submit()">
+      <option value="">All Categories</option>
+      <option value="Fiction"     <%= category === 'Fiction'     ? 'selected' : '' %>>Fiction</option>
+      <option value="Non-Fiction" <%= category === 'Non-Fiction' ? 'selected' : '' %>>Non-Fiction</option>
+      <option value="Science"     <%= category === 'Science'     ? 'selected' : '' %>>Science</option>
+      <option value="History"     <%= category === 'History'     ? 'selected' : '' %>>History</option>
+      <option value="Biography"   <%= category === 'Biography'   ? 'selected' : '' %>>Biography</option>
+      <option value="Technology"  <%= category === 'Technology'  ? 'selected' : '' %>>Technology</option>
+      <option value="Romance"     <%= category === 'Romance'     ? 'selected' : '' %>>Romance</option>
+      <option value="Mystery"     <%= category === 'Mystery'     ? 'selected' : '' %>>Mystery</option>
+      <option value="Finance"     <%= category === 'Finance'     ? 'selected' : '' %>>Finance</option>
+      <option value="Education"   <%= category === 'Education'   ? 'selected' : '' %>>Education</option>
+      <option value="Programming" <%= category === 'Programming' ? 'selected' : '' %>>Programming</option>
+    </select>
+    <button type="submit" style="display:none"></button>
+  </form>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Book Name</th>
+          <th>Author</th>
+          <th>Category</th>
+          <th>Available</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% books.forEach((book) => { %>
+          <tr>
+            <td><%= book.bookName %></td>
+            <td><%= book.authorName %></td>
+            <td><%= book.category %></td>
+            <td>
+              <span class="status <%= book.available > 0 ? 'available' : 'issued' %>">
+                <%= book.available > 0 ? book.available + ' left' : 'Not Available' %>
+              </span>
+            </td>
+            <td>
+              <% if (book.available > 0) { %>
+                <form action="/user/books/<%= book._id %>/request" method="POST" style="display:inline">
+                  <button type="submit" class="action-btn edit"
+                    onclick="return confirm('Request this book?')">Request</button>
+                </form>
+              <% } else { %>
+                <span style="color:#aaa; font-size:0.85rem;">Unavailable</span>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

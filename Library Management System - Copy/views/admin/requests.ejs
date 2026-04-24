@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request Books</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>📚 Library Management System</h1>
+  </header>
+  <div class="container">
+  <div class="section-header">
+    <h2>📬 Book Requests</h2>
+    <a href="/dashboard" class="btn secondary">← Back to Dashboard</a>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Book</th>
+          <th>Request Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (requests.length === 0) { %>
+          <tr><td colspan="5" style="text-align:center; color:#aaa;">No requests yet</td></tr>
+        <% } %>
+        <% requests.forEach((r) => { %>
+          <tr>
+            <td><%= r.user ? r.user.name : 'N/A' %></td>
+            <td><%= r.book ? r.book.bookName : 'N/A' %></td>
+            <td><%= r.requestDate.toDateString() %></td>
+            <td>
+              <span class="status <%= r.status === 'Approved' ? 'available' : r.status === 'Rejected' ? 'overdue' : 'issued' %>">
+                <%= r.status %>
+              </span>
+            </td>
+            <td>
+              <% if (r.status === 'Pending') { %>
+                <form action="/admin/requests/<%= r._id %>/approve?_method=PUT" method="POST" style="display:inline">
+                  <button type="submit" class="action-btn edit"
+                    onclick="return confirm('Approve this request?')">Approve</button>
+                </form>
+                <form action="/admin/requests/<%= r._id %>/reject?_method=PUT" method="POST" style="display:inline">
+                  <button type="submit" class="action-btn delete"
+                    onclick="return confirm('Reject this request?')">Reject</button>
+                </form>
+              <% } else { %>
+                <span style="color:#aaa; font-size:0.85rem;">— Done —</span>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

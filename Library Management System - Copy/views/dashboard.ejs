@@ -1,0 +1,62 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<div class="container">
+  <section id="dashboard" class="tab-content active">
+
+    <div class="section-header">
+      <h2>Library Dashboard</h2>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number"><%= totalBooks %></div>
+        <div class="stat-label">Total Books</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= availableBooks %></div>
+        <div class="stat-label">Available Books</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= totalMembers %></div>
+        <div class="stat-label">Total Members</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= activeLoans %></div>
+        <div class="stat-label">Active Loans</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number"><%= overdueBooks %></div>
+        <div class="stat-label">Overdue Books</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">₹<%= totalFines %></div>
+        <div class="stat-label">Total Fines</div>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <h3>Recent Activity</h3>
+      <div id="recentActivity">
+        <% recentTransactions.forEach((t) => { %>
+          <div class="activity-item">
+            <div class="activity-text">
+              <strong><%= t.member ? t.member.name : 'N/A' %></strong>
+              <%= t.status === 'Returned' ? 'returned' : 'borrowed' %>
+              <strong><%= t.book ? t.book.bookName : 'N/A' %></strong>
+              <% if (t.fine > 0) { %>
+                — Fine: <span style="color: #dc3545;">₹<%= t.fine %></span>
+              <% } %>
+            </div>
+            <div class="activity-date">
+              <span class="status <%= t.status === 'Issued' ? 'issued' : t.status === 'Returned' ? 'returned' : 'overdue' %>">
+                <%= t.status %>
+              </span>
+              &nbsp;<%= t.issueDate.toDateString() %>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+
+  </section>
+</div>

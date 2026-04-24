@@ -1,0 +1,72 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<div class="container">
+  <div class="section-header">
+    <h2>Edit Book</h2>
+    <a href="/books" class="btn secondary">← Back to Books</a>
+  </div>
+  <div class="form-container">
+    <div class="modal-content" style="margin: 0; max-width: 600px">
+      <form action="/books/<%= book._id %>" method="POST">
+        <input type="hidden" name="_method" value="PUT" />
+
+        <div class="form-group">
+          <label>Book Name</label>
+          <input
+            type="text"
+            name="bookName"
+            value="<%= book.bookName %>"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Author Name</label>
+          <input
+            type="text"
+            name="authorName"
+            value="<%= book.authorName %>"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <input
+            type="text"
+            name="category"
+            value="<%= book.category %>"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Quantity</label>
+          <input
+            type="number"
+            name="quantity"
+            value="<%= book.quantity %>"
+            required
+            min="1"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Available</label>
+          <input
+            type="number"
+            name="available"
+            value="<%= book.available %>"
+            required
+            min="0"
+          />
+        </div>
+
+        <div class="form-actions">
+          <a href="/books" class="btn secondary">Cancel</a>
+          <button type="submit" class="btn primary">Update Book</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
